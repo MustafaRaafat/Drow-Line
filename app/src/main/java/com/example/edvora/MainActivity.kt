@@ -1,274 +1,126 @@
 package com.example.edvora
 
-import android.content.Context
 import android.graphics.*
-import android.hardware.camera2.params.MeteringRectangle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.widget.*
+import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
+import com.example.edvora.ui.DrawingArrow
+import com.example.edvora.ui.DrawingLine
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),AdapterView.OnItemSelectedListener  {
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        if (p0 != null) {
+            when (p0.getItemAtPosition(p2)){
+                "red" -> mPaint.setColor(Color.RED)
+                "green"-> mPaint.setColor(Color.RED)
+                "black" -> mPaint.setColor(Color.RED)
+                "blue" -> mPaint.setColor(Color.RED)
+            }
+        }
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+        TODO("Not yet implemented")
+    }
 
     lateinit var mPaint: Paint
     lateinit var d2: RelativeLayout
-    lateinit var pencil_button:Button
-    lateinit var arrow_button:Button
-    lateinit var rectangle_button:Button
-    lateinit var ellipse_button:Button
-
+    lateinit var pencil_button:RadioButton
+    lateinit var arrow_button:RadioButton
+    lateinit var rectangle_button:RadioButton
+    lateinit var ellipse_button:RadioButton
+    lateinit var colorButton:Spinner
+    lateinit var radioGroup:RadioGroup
+    lateinit var recyclercolor:RecyclerView
+    lateinit var readp:ColorAdapter
+    var data= arrayOf(Color.BLACK,Color.BLUE,Color.GREEN,Color.RED,Color.YELLOW)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var recyclercolor:RecyclerView=findViewById(R.id.color_but)
-        var data= arrayOf(Color.BLACK,Color.BLUE,Color.GREEN,Color.RED,Color.YELLOW)
-        var readp=ColorAdapter(data)
+        radioGroup =findViewById(R.id.Radio_container)
+        recyclercolor=findViewById(R.id.colors_recy)
+
+
+        readp=ColorAdapter()
+        readp.setcolorData(data)
+
         recyclercolor.adapter=readp
+
         pencil_button=findViewById(R.id.draw_line_but)
-        arrow_button=findViewById(R.id.draw_line_but)
-        rectangle_button=findViewById(R.id.draw_line_but)
-        ellipse_button=findViewById(R.id.draw_line_but)
-//        pencil_button.setSelected(true)
-        pencil_button.setOnClickListener{
+        arrow_button=findViewById(R.id.draw_arrow_but)
+        rectangle_button=findViewById(R.id.draw_rectangle_but)
+        ellipse_button=findViewById(R.id.draw_cercle_but)
+        colorButton=findViewById(R.id.draw_color_but)
+        d2=findViewById(R.id.container_draw)
+        ArrayAdapter.createFromResource(this,
+        R.array.color_array,
+        android.R.layout.simple_spinner_item)
+            .also { arrayAdapter ->
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                colorButton.adapter = arrayAdapter
+            }
+        colorButton.onItemSelectedListener=this
 
-        }
-        arrow_button.setOnClickListener{
-
-        }
-        rectangle_button.setOnClickListener{
-
-        }
-        ellipse_button.setOnClickListener{
-
-        }
 
         mPaint = Paint()
-        var dv= DrawingView(this,mPaint)
-        d2=findViewById(R.id.container_draw);
-        d2.addView(dv)
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.GREEN);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(12f);
+
+//        d2.onTouchEvent(MotionEvent.obtain(1,1,1,1f,2f,2))
+//        d2.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
+//
+//            return@OnTouchListener true
+//        })
+//
+//        (View.OnTouchListener { view, motionEvent ->
+//
+//            return@OnTouchListener true
+//        })
+
+//        mPaint.setAntiAlias(true);
+//        mPaint.setDither(true);
+//        mPaint.setColor(readp.getColor());
+//        mPaint.setStyle(Paint.Style.STROKE);
+//        mPaint.setStrokeJoin(Paint.Join.ROUND);
+//        mPaint.setStrokeCap(Paint.Cap.ROUND);
+//        mPaint.setStrokeWidth(12f);
     }
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            // Is the button now checked?
+            val checked = view.isChecked
 
+            // Check which radio button was clicked
+            when (view) {
+                 pencil_button->
+                    if (checked) {
+                        var dv= DrawingLine(this,mPaint,radioGroup,colorButton,
+                            recyclercolor)
+                        dv.mmPaint.setColor(Color.RED)
 
-    public class DrawingView : View {
+                        d2.addView(dv)
 
-        var mywidth: Int = 0
-        var myheight: Int = 0
-        lateinit var mBitmap: Bitmap
-         var mCanvas: Canvas
-         var mPath: Path
-         var mmPaint:Paint
-         var mBitmapPaint: Paint
-         var circlePaint: Paint
-        lateinit var circlePath: Path
-        var mContext : Context
-        lateinit var recPaint: Paint
-        constructor(context: Context,mPaint: Paint): super(context){
-            mPath= Path()
-            mCanvas=Canvas()
-            mmPaint=mPaint
-            circlePath=Path()
-            this.mContext=context
-            mBitmapPaint=Paint(Paint.DITHER_FLAG)
-            circlePaint= Paint()
-            circlePaint.setAntiAlias(true);
-            circlePaint.setColor(Color.BLUE);
-            circlePaint.setStyle(Paint.Style.STROKE);
-            circlePaint.setStrokeJoin(Paint.Join.MITER);
-            circlePaint.setStrokeWidth(4f);
-//            recPaint=new Paint();
-//            recPaint.setColor(Color.BLACK);
-//            recPaint.setStyle(Paint.Style.STROKE);
-//            recPaint.setStrokeJoin(Paint.Join.MITER);
-//            recPaint.setStrokeWidth(4f);
-        }
-
-        override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-            super.onSizeChanged(w, h, oldw, oldh)
-
-            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            mCanvas = Canvas(mBitmap);
-        }
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-
-            canvas.drawBitmap(mBitmap,0f,0f,mBitmapPaint)
-
-            canvas.drawPath( mPath, mmPaint )
-            canvas.drawPath( circlePath,  circlePaint)
-        }
-
-
-        private  var mX=0f
-        private  var mY=0f
-
-        val TOUCH_TOLERANCE = 4f;
-
-        private fun touch_start(x:Float, y:Float) {
-            mPath.reset();
-            mPath.moveTo(x, y);
-            mX = x;
-            mY = y;
-        }
-
-        private fun touch_move( x:Float, y:Float) {
-            var dx = Math.abs(x - mX);
-            var dy = Math.abs(y - mY);
-            if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-                mX = x;
-                mY = y;
-
-//                mCanvas.drawRect(mX,mY,x,y,recPaint);
-                circlePath.reset();
-                circlePath.addCircle(mX, mY, 30f, Path.Direction.CW);
-            }
-        }
-
-        private fun touch_up() {
-            mPath.lineTo(mX, mY);
-            circlePath.reset();
-            // commit the path to our offscreen
-            mCanvas.drawPath(mPath,  mmPaint)
-            // kill this so we don't double draw
-            mPath.reset()
-        }
-
-        override fun onTouchEvent(event: MotionEvent?): Boolean {
-            var x=0f
-            var y=0f
-            if (event != null) {
-                x = event.getX()
-                y = event.getY()
-
-                when (event.getAction()) {
-                    MotionEvent.ACTION_DOWN->{
-                        touch_start(x, y);
-                        invalidate();
                     }
-                    MotionEvent.ACTION_MOVE->{
-                        touch_move(x, y);
-                        invalidate();
+
+                arrow_button ->
+                    if (checked) {
+                        var dd=DrawingArrow(this,mPaint,radioGroup,colorButton,recyclercolor)
+                        dd.mmPaint.setColor(Color.GREEN)
+                        d2.addView(dd)
                     }
-                    MotionEvent.ACTION_UP->{
-                        touch_up();
-                        invalidate();
+                rectangle_button ->
+                    if (checked) {
+                        // Ninjas rule
                     }
-                }
-            }
-            return true;
-        }
-
-        /*
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        dv = new DrawingView(this);
-        setContentView(R.layout.activity_main);
-        d=findViewById(R.id.imageView);
-        d2=findViewById(R.id.imagedd);
-        ss=findViewById(R.id.sss);
-        d2.addView(dv);
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.GREEN);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(12);
-    }
-
-    public class DrawingView extends View {
-
-
-        @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
-
-            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            mCanvas = new Canvas(mBitmap);
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-
-            canvas.drawBitmap( mBitmap, 0, 0, mBitmapPaint);
-            canvas.drawPath( mPath,  mPaint);
-            canvas.drawPath( circlePath,  circlePaint);
-        }
-
-        private float mX, mY;
-        private static final float TOUCH_TOLERANCE = 4;
-
-        private void touch_start(float x, float y) {
-            mPath.reset();
-            mPath.moveTo(x, y);
-            mX = x;
-            mY = y;
-        }
-
-        private void touch_move(float x, float y) {
-            float dx = Math.abs(x - mX);
-            float dy = Math.abs(y - mY);
-            if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-                mX = x;
-                mY = y;
-
-//                mCanvas.drawRect(mX,mY,x,y,recPaint);
-                circlePath.reset();
-                circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
+                ellipse_button ->
+                    if (checked) {
+                        // Ninjas rule
+                    }
             }
         }
-
-        private void touch_up() {
-            mPath.lineTo(mX, mY);
-            circlePath.reset();
-            // commit the path to our offscreen
-            mCanvas.drawPath(mPath,  mPaint);
-            // kill this so we don't double draw
-            mPath.reset();
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent event) {
-            float x = event.getX();
-            float y = event.getY();
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    touch_start(x, y);
-                    invalidate();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    touch_move(x, y);
-                    invalidate();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    touch_up();
-                    invalidate();
-                    break;
-            }
-            return true;
-        }
-    }
-    *  */
-
     }
 }

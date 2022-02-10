@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Edvora</string>
-    <array name="ff">
-        <item >#111111
-        </item>
-    </array>
+    <string-array name="color_array">
+        <item>red</item>
+        <item>blue</item>
+        <item>green</item>
+        <item>black</item>
+    </string-array>
 </resources>

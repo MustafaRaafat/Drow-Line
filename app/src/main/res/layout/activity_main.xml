@@ -22,10 +22,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioGroup
+            android:id="@+id/Radio_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_weight="4"
+            android:onClick="onRadioButtonClicked"
             android:checkedButton="@id/draw_line_but"
             android:orientation="horizontal">
 
@@ -35,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:onClick="onRadioButtonClicked"
                 android:background="@drawable/button_shape"
                 android:button="@android:color/transparent"
                 android:foreground="@drawable/ic_launcher_foreground" />
@@ -45,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:onClick="onRadioButtonClicked"
                 android:background="@drawable/button_shape"
                 android:button="@android:color/transparent"
                 android:foreground="@drawable/ic_launcher_foreground" />
@@ -55,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:onClick="onRadioButtonClicked"
                 android:background="@drawable/button_shape"
                 android:button="@android:color/transparent"
                 android:foreground="@drawable/ic_launcher_foreground" />
@@ -65,27 +70,30 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:onClick="onRadioButtonClicked"
                 android:background="@drawable/button_shape"
                 android:button="@android:color/transparent"
                 android:foreground="@drawable/ic_launcher_foreground" />
 
         </RadioGroup>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/draw_color_but"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:background="@drawable/button_shape"
-            android:foreground="@drawable/ic_launcher_foreground" />
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/color_but"
-        android:layout_width="30dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/colors_recy"
+        android:layout_width="200dp"
+        app:spanCount="2"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_height="200dp"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="@id/tools_container"
         app:layout_constraintTop_toBottomOf="@id/tools_container" />
