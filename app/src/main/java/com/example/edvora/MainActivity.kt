@@ -2,29 +2,52 @@ package com.example.edvora
 
 import android.content.Context
 import android.graphics.*
+import android.hardware.camera2.params.MeteringRectangle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var imageView:ImageView
     lateinit var mPaint: Paint
     lateinit var d2: RelativeLayout
+    lateinit var pencil_button:Button
+    lateinit var arrow_button:Button
+    lateinit var rectangle_button:Button
+    lateinit var ellipse_button:Button
 
 
-     fun getf():Paint{
-         if (mPaint==null){
-             mPaint= Paint()
-         }
-        return mPaint;
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        var recyclercolor:RecyclerView=findViewById(R.id.color_but)
+        var data= arrayOf(Color.BLACK,Color.BLUE,Color.GREEN,Color.RED,Color.YELLOW)
+        var readp=ColorAdapter(data)
+        recyclercolor.adapter=readp
+        pencil_button=findViewById(R.id.draw_line_but)
+        arrow_button=findViewById(R.id.draw_line_but)
+        rectangle_button=findViewById(R.id.draw_line_but)
+        ellipse_button=findViewById(R.id.draw_line_but)
+//        pencil_button.setSelected(true)
+        pencil_button.setOnClickListener{
+
+        }
+        arrow_button.setOnClickListener{
+
+        }
+        rectangle_button.setOnClickListener{
+
+        }
+        ellipse_button.setOnClickListener{
+
+        }
+
         mPaint = Paint()
         var dv= DrawingView(this,mPaint)
         d2=findViewById(R.id.container_draw);
