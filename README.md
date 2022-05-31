@@ -1,11 +1,8 @@
-# Edvora project
-
-Assignment - Android Developer
-
-## Description of the coding assessment task.
-
-The goal of this task is to check my knowledge, speed, code quality, UI background .
+# color project
 
 
+## Description of the app.
+
+The goal of this app is to drow lines.
 
 This application is written using Kotlin programming language.  
